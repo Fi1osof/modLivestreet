@@ -15,20 +15,14 @@ $cacheOptions = array(
 );
 
 $queries = array();
-
-/*if($modx->cacheManager->set('sql', $var, 0, $cacheOptions)){
-    print 'yes';
-}
-else print 'no';
-
-exit;*/
+ 
 $modelPath = $sources['model'];
 // $modx->addPackage('livestreet', $sources['build'].'schema/model/' );
 $modx->addPackage('livestreet',  $modelPath);
 
 //  $livestreetSchemaPath = $sources['build'].'schema/model/livestreet.mysql.schema.xml';
 $livestreetSchemaPath = $modelPath.'/livestreet.mysql.schema.xml';
-print $livestreetSchemaPath;
+
 $schema = simplexml_load_file($livestreetSchemaPath);
 
 // print_r($schema);

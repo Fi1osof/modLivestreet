@@ -1,5 +1,15 @@
 modLivestreet Full 0.5.6
 ===============================================================
+1.  Search bugfix
+2.  Installer update
+3.  Added $this->modx for Livestreet classes Action and Module
+4.  Added Viewer->oSmarty->modx in Livestreet
+5.  Added Smarty plugins from modxSmarty (see http://modx.com/extras/packages/modxsmarty)
+    (not required for install modxSmarty)
+
+
+modLivestreet Full 0.5.6
+===============================================================
 1.  Removed .htaccess files from source
 
 
