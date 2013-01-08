@@ -1,0 +1,7 @@
+We want:
+
+1. Синхронизировать регистрацию пользователей в MODX и LiveStreet
+При регистрации пользователей в LiveStreet должен создаваться пользователь
+в MODX, и наоборот.
+1. Synchronize MODX and LiveStreet users registration and authorize
+

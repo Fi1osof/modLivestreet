@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">modLivestreet</lang>
+	</name>
+	<author>
+		<lang name="default">Nikolay Lanets aka Fi1osof</lang>
+	</author>
+	<homepage>http://modlivestreet.ru</homepage>
+	<settings></settings>
+	<version>0.0.1</version>
+	<requires>
+		<livestreet>0.4.2</livestreet>
+		<plugins>
+
+		</plugins>
+	</requires>
+	<description>
+		<lang name="default">Plugin for collaboration Livestreet and MODX Revolution</lang>
+		<lang name="russian">Плагин для связки Livestreet-а с MODX</lang>
+	</description>
+</plugin>

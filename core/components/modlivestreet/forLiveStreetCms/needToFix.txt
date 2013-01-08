@@ -1,0 +1,13 @@
+1. in livestreet_root/engine/modules/viewer/Viewer.class.php
+    a) in method DisplayAjax($sType='json') change exit(); on return;
+b) in method Display($sTemplate) change 
+if ($this->sResponseAjax) {
+	$this->DisplayAjax($this->sResponseAjax);
+}
+on if ($this->sResponseAjax) {
+	$this->DisplayAjax($this->sResponseAjax);
+        return;
+}
+see: components/livestreet/docs/forLiveStreet/source/engine/modules/viewer/Viewer.class.php
+
+2. 

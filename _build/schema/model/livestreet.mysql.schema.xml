@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="livestreet" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="Blog" table="blog" extends="xPDOObject">
+		<field key="blog_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user_owner_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="blog_title" dbtype="varchar" precision="200" phptype="string" null="false" index="index" />
+		<field key="blog_description" dbtype="text" phptype="string" null="false" />
+		<field key="blog_type" dbtype="enum" precision="'personal','open','invite','close'" phptype="string" null="true" default="personal" index="index" />
+		<field key="blog_date_add" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="blog_date_edit" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="blog_rating" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" />
+		<field key="blog_count_vote" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="blog_count_user" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="blog_count_topic" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="blog_limit_rating_topic" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" />
+		<field key="blog_url" dbtype="varchar" precision="200" phptype="string" null="true" index="index" />
+		<field key="blog_avatar" dbtype="varchar" precision="250" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="blog_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_owner_id" name="user_owner_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_owner_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="blog_type" name="blog_type" primary="false" unique="false" type="BTREE" >
+			<column key="blog_type" length="" collation="A" null="true" />
+		</index>
+		<index alias="blog_url" name="blog_url" primary="false" unique="false" type="BTREE" >
+			<column key="blog_url" length="" collation="A" null="true" />
+		</index>
+		<index alias="blog_title" name="blog_title" primary="false" unique="false" type="BTREE" >
+			<column key="blog_title" length="" collation="A" null="false" />
+		</index>
+		<index alias="blog_count_topic" name="blog_count_topic" primary="false" unique="false" type="BTREE" >
+			<column key="blog_count_topic" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="BlogUser" table="blog_user" extends="xPDOObject">
+		<field key="blog_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_role" dbtype="int" precision="3" phptype="integer" null="true" default="1" />
+
+		<index alias="blog_id_user_id_uniq" name="blog_id_user_id_uniq" primary="false" unique="true" type="BTREE" >
+			<column key="blog_id" length="" collation="A" null="false" />
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="blog_id" name="blog_id" primary="false" unique="false" type="BTREE" >
+			<column key="blog_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Comment" table="comment" extends="xPDOObject">
+		<field key="comment_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="comment_pid" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="comment_left" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="comment_right" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="comment_level" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="target_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="target_type" dbtype="enum" precision="'topic','talk'" phptype="string" null="false" default="topic" index="index" />
+		<field key="target_parent_id" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="comment_text" dbtype="text" phptype="string" null="false" />
+		<field key="comment_text_hash" dbtype="varchar" precision="32" phptype="string" null="false" />
+		<field key="comment_date" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="comment_user_ip" dbtype="varchar" precision="20" phptype="string" null="false" />
+		<field key="comment_rating" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" />
+		<field key="comment_count_vote" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="comment_count_favourite" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="comment_delete" dbtype="tinyint" precision="4" phptype="integer" null="false" default="0" />
+		<field key="comment_publish" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="comment_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="comment_pid" name="comment_pid" primary="false" unique="false" type="BTREE" >
+			<column key="comment_pid" length="" collation="A" null="true" />
+		</index>
+		<index alias="type_date_rating" name="type_date_rating" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="comment_date" length="" collation="A" null="false" />
+			<column key="comment_rating" length="" collation="A" null="false" />
+		</index>
+		<index alias="id_type" name="id_type" primary="false" unique="false" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="true" />
+			<column key="target_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="type_delete_publish" name="type_delete_publish" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="comment_delete" length="" collation="A" null="false" />
+			<column key="comment_publish" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_type" name="user_type" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="target_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="target_parent_id" name="target_parent_id" primary="false" unique="false" type="BTREE" >
+			<column key="target_parent_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="comment_left" name="comment_left" primary="false" unique="false" type="BTREE" >
+			<column key="comment_left" length="" collation="A" null="false" />
+		</index>
+		<index alias="comment_right" name="comment_right" primary="false" unique="false" type="BTREE" >
+			<column key="comment_right" length="" collation="A" null="false" />
+		</index>
+		<index alias="comment_level" name="comment_level" primary="false" unique="false" type="BTREE" >
+			<column key="comment_level" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="CommentOnline" table="comment_online" extends="xPDOObject">
+		<field key="comment_online_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="target_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="target_type" dbtype="enum" precision="'topic','talk'" phptype="string" null="false" default="topic" index="index" />
+		<field key="target_parent_id" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="comment_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="comment_online_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="id_type" name="id_type" primary="false" unique="true" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="true" />
+			<column key="target_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="comment_id" name="comment_id" primary="false" unique="false" type="BTREE" >
+			<column key="comment_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="type_parent" name="type_parent" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="target_parent_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Favourite" table="favourite" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="target_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="target_type" dbtype="enum" precision="'topic','comment','talk'" phptype="string" null="true" default="topic" />
+		<field key="target_publish" dbtype="tinyint" precision="1" phptype="integer" null="true" default="1" index="index" />
+		<field key="tags" dbtype="varchar" precision="250" phptype="string" null="false" />
+
+		<index alias="user_id_target_id_type" name="user_id_target_id_type" primary="false" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="true" />
+			<column key="target_type" length="" collation="A" null="true" />
+		</index>
+		<index alias="target_publish" name="target_publish" primary="false" unique="false" type="BTREE" >
+			<column key="target_publish" length="" collation="A" null="true" />
+		</index>
+		<index alias="id_type" name="id_type" primary="false" unique="false" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="true" />
+			<column key="target_type" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="FavouriteTag" table="favourite_tag" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="target_id" dbtype="int" precision="11" phptype="integer" null="false" />
+		<field key="target_type" dbtype="enum" precision="'topic','comment','talk'" phptype="string" null="false" index="index" />
+		<field key="is_user" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="text" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+
+		<index alias="user_id_target_type_id" name="user_id_target_type_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target_type_id" name="target_type_id" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="is_user" name="is_user" primary="false" unique="false" type="BTREE" >
+			<column key="is_user" length="" collation="A" null="false" />
+		</index>
+		<index alias="text" name="text" primary="false" unique="false" type="BTREE" >
+			<column key="text" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Friend" table="friend" extends="xPDOObject">
+		<field key="user_from" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="user_to" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="status_from" dbtype="int" precision="4" phptype="integer" null="false" />
+		<field key="status_to" dbtype="int" precision="4" phptype="integer" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user_from" length="" collation="A" null="false" />
+			<column key="user_to" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_to" name="user_to" primary="false" unique="false" type="BTREE" >
+			<column key="user_to" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="GeoCity" table="geo_city" extends="xPDOSimpleObject">
+		<field key="country_id" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="region_id" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="name_ru" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="name_en" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="sort" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="sort" name="sort" primary="false" unique="false" type="BTREE" >
+			<column key="sort" length="" collation="A" null="false" />
+		</index>
+		<index alias="country_id" name="country_id" primary="false" unique="false" type="BTREE" >
+			<column key="country_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="region_id" name="region_id" primary="false" unique="false" type="BTREE" >
+			<column key="region_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_ru" name="name_ru" primary="false" unique="false" type="BTREE" >
+			<column key="name_ru" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_en" name="name_en" primary="false" unique="false" type="BTREE" >
+			<column key="name_en" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="GeoCountry" table="geo_country" extends="xPDOSimpleObject">
+		<field key="name_ru" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="name_en" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="code" dbtype="varchar" precision="5" phptype="string" null="false" index="index" />
+		<field key="sort" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="sort" name="sort" primary="false" unique="false" type="BTREE" >
+			<column key="sort" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_ru" name="name_ru" primary="false" unique="false" type="BTREE" >
+			<column key="name_ru" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_en" name="name_en" primary="false" unique="false" type="BTREE" >
+			<column key="name_en" length="" collation="A" null="false" />
+		</index>
+		<index alias="code" name="code" primary="false" unique="false" type="BTREE" >
+			<column key="code" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="GeoRegion" table="geo_region" extends="xPDOSimpleObject">
+		<field key="country_id" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="name_ru" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="name_en" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="sort" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+
+		<index alias="sort" name="sort" primary="false" unique="false" type="BTREE" >
+			<column key="sort" length="" collation="A" null="false" />
+		</index>
+		<index alias="country_id" name="country_id" primary="false" unique="false" type="BTREE" >
+			<column key="country_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_ru" name="name_ru" primary="false" unique="false" type="BTREE" >
+			<column key="name_ru" length="" collation="A" null="false" />
+		</index>
+		<index alias="name_en" name="name_en" primary="false" unique="false" type="BTREE" >
+			<column key="name_en" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="GeoTarget" table="geo_target" extends="xPDOObject">
+		<field key="geo_type" dbtype="varchar" precision="20" phptype="string" null="false" index="pk" />
+		<field key="geo_id" dbtype="int" precision="11" phptype="integer" null="false" index="pk" />
+		<field key="target_type" dbtype="varchar" precision="20" phptype="string" null="false" index="pk" />
+		<field key="target_id" dbtype="int" precision="11" phptype="integer" null="false" index="pk" />
+		<field key="country_id" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="region_id" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="city_id" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="geo_type" length="" collation="A" null="false" />
+			<column key="geo_id" length="" collation="A" null="false" />
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target_type" name="target_type" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="country_id" name="country_id" primary="false" unique="false" type="BTREE" >
+			<column key="country_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="region_id" name="region_id" primary="false" unique="false" type="BTREE" >
+			<column key="region_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="city_id" name="city_id" primary="false" unique="false" type="BTREE" >
+			<column key="city_id" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="Invite" table="invite" extends="xPDOObject">
+		<field key="invite_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="invite_code" dbtype="varchar" precision="32" phptype="string" null="false" index="unique" />
+		<field key="user_from_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user_to_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="invite_date_add" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="invite_date_used" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="invite_used" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="invite_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="invite_code" name="invite_code" primary="false" unique="true" type="BTREE" >
+			<column key="invite_code" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_from_id" name="user_from_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_from_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_to_id" name="user_to_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_to_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="invite_date_add" name="invite_date_add" primary="false" unique="false" type="BTREE" >
+			<column key="invite_date_add" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="NotifyTask" table="notify_task" extends="xPDOObject">
+		<field key="notify_task_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user_login" dbtype="varchar" precision="30" phptype="string" null="true" />
+		<field key="user_mail" dbtype="varchar" precision="50" phptype="string" null="true" />
+		<field key="notify_subject" dbtype="varchar" precision="200" phptype="string" null="true" />
+		<field key="notify_text" dbtype="text" phptype="string" null="true" />
+		<field key="date_created" dbtype="datetime" phptype="datetime" null="true" index="index" />
+		<field key="notify_task_status" dbtype="tinyint" precision="2" attributes="unsigned" phptype="integer" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="notify_task_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="date_created" name="date_created" primary="false" unique="false" type="BTREE" >
+			<column key="date_created" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="Reminder" table="reminder" extends="xPDOObject">
+		<field key="reminder_code" dbtype="varchar" precision="32" phptype="string" null="false" index="pk" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="unique" />
+		<field key="reminder_date_add" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="reminder_date_used" dbtype="datetime" phptype="datetime" null="true" default="0000-00-00 00:00:00" />
+		<field key="reminder_date_expire" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="reminde_is_used" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="reminder_code" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Session" table="session" extends="xPDOObject">
+		<field key="session_key" dbtype="varchar" precision="32" phptype="string" null="false" index="pk" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="unique" />
+		<field key="session_ip_create" dbtype="varchar" precision="15" phptype="string" null="false" />
+		<field key="session_ip_last" dbtype="varchar" precision="15" phptype="string" null="false" />
+		<field key="session_date_create" dbtype="datetime" phptype="datetime" null="false" default="0000-00-00 00:00:00" />
+		<field key="session_date_last" dbtype="datetime" phptype="datetime" null="false" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="session_key" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="session_date_last" name="session_date_last" primary="false" unique="false" type="BTREE" >
+			<column key="session_date_last" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="StreamEvent" table="stream_event" extends="xPDOSimpleObject">
+		<field key="event_type" dbtype="varchar" precision="100" phptype="string" null="false" index="index" />
+		<field key="target_id" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="date_added" dbtype="timestamp" phptype="timestamp" null="false" default="CURRENT_TIMESTAMP" />
+		<field key="publish" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" index="index" />
+
+		<index alias="event_type" name="event_type" primary="false" unique="false" type="BTREE" >
+			<column key="event_type" length="" collation="A" null="false" />
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="publish" name="publish" primary="false" unique="false" type="BTREE" >
+			<column key="publish" length="" collation="A" null="false" />
+		</index>
+		<index alias="target_id" name="target_id" primary="false" unique="false" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="StreamSubscribe" table="stream_subscribe" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="target_user_id" dbtype="int" precision="11" phptype="integer" null="false" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="target_user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="StreamUserType" table="stream_user_type" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="event_type" dbtype="varchar" precision="100" phptype="string" null="true" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="event_type" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="Subscribe" table="subscribe" extends="xPDOSimpleObject">
+		<field key="target_type" dbtype="varchar" precision="20" phptype="string" null="false" index="index" />
+		<field key="target_id" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="mail" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="date_add" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="date_remove" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="ip" dbtype="varchar" precision="20" phptype="string" null="false" index="index" />
+		<field key="key" dbtype="varchar" precision="32" phptype="string" null="true" index="index" />
+		<field key="status" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" index="index" />
+
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+			<column key="target_type" length="" collation="A" null="false" />
+		</index>
+		<index alias="mail" name="mail" primary="false" unique="false" type="BTREE" >
+			<column key="mail" length="" collation="A" null="false" />
+		</index>
+		<index alias="status" name="status" primary="false" unique="false" type="BTREE" >
+			<column key="status" length="" collation="A" null="false" />
+		</index>
+		<index alias="key" name="key" primary="false" unique="false" type="BTREE" >
+			<column key="key" length="" collation="A" null="true" />
+		</index>
+		<index alias="target_id" name="target_id" primary="false" unique="false" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="ip" name="ip" primary="false" unique="false" type="BTREE" >
+			<column key="ip" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Talk" table="talk" extends="xPDOObject">
+		<field key="talk_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="talk_title" dbtype="varchar" precision="200" phptype="string" null="false" index="index" />
+		<field key="talk_text" dbtype="text" phptype="string" null="false" />
+		<field key="talk_date" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="talk_date_last" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="talk_user_id_last" dbtype="int" precision="11" phptype="integer" null="false" index="index" />
+		<field key="talk_user_ip" dbtype="varchar" precision="20" phptype="string" null="false" />
+		<field key="talk_comment_id_last" dbtype="int" precision="11" phptype="integer" null="true" />
+		<field key="talk_count_comment" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="talk_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="talk_title" name="talk_title" primary="false" unique="false" type="BTREE" >
+			<column key="talk_title" length="" collation="A" null="false" />
+		</index>
+		<index alias="talk_date" name="talk_date" primary="false" unique="false" type="BTREE" >
+			<column key="talk_date" length="" collation="A" null="false" />
+		</index>
+		<index alias="talk_date_last" name="talk_date_last" primary="false" unique="false" type="BTREE" >
+			<column key="talk_date_last" length="" collation="A" null="false" />
+		</index>
+		<index alias="talk_user_id_last" name="talk_user_id_last" primary="false" unique="false" type="BTREE" >
+			<column key="talk_user_id_last" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TalkBlacklist" table="talk_blacklist" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_target_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="user_target_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="mx_livestreet_talk_blacklist_fk_target" name="mx_livestreet_talk_blacklist_fk_target" primary="false" unique="false" type="BTREE" >
+			<column key="user_target_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TalkUser" table="talk_user" extends="xPDOObject">
+		<field key="talk_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="date_last" dbtype="datetime" phptype="datetime" null="true" index="index" />
+		<field key="comment_id_last" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="comment_count_new" dbtype="int" precision="11" phptype="integer" null="false" default="0" index="index" />
+		<field key="talk_user_active" dbtype="tinyint" precision="1" phptype="integer" null="true" default="1" index="index" />
+
+		<index alias="talk_id_user_id" name="talk_id_user_id" primary="false" unique="true" type="BTREE" >
+			<column key="talk_id" length="" collation="A" null="false" />
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="date_last" name="date_last" primary="false" unique="false" type="BTREE" >
+			<column key="date_last" length="" collation="A" null="true" />
+		</index>
+		<index alias="date_last_2" name="date_last_2" primary="false" unique="false" type="BTREE" >
+			<column key="date_last" length="" collation="A" null="true" />
+		</index>
+		<index alias="talk_user_active" name="talk_user_active" primary="false" unique="false" type="BTREE" >
+			<column key="talk_user_active" length="" collation="A" null="true" />
+		</index>
+		<index alias="comment_count_new" name="comment_count_new" primary="false" unique="false" type="BTREE" >
+			<column key="comment_count_new" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Topic" table="topic" extends="xPDOObject">
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="blog_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="topic_type" dbtype="enum" precision="'topic','link','question','photoset'" phptype="string" null="false" default="topic" />
+		<field key="topic_title" dbtype="varchar" precision="200" phptype="string" null="false" />
+		<field key="topic_tags" dbtype="varchar" precision="250" phptype="string" null="false" />
+		<field key="topic_date_add" dbtype="datetime" phptype="datetime" null="false" index="index" />
+		<field key="topic_date_edit" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="topic_user_ip" dbtype="varchar" precision="20" phptype="string" null="false" />
+		<field key="topic_publish" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" index="index" />
+		<field key="topic_publish_draft" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="topic_publish_index" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="topic_rating" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" index="index" />
+		<field key="topic_count_vote" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="topic_count_vote_up" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="topic_count_vote_down" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="topic_count_vote_abstain" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="topic_count_read" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="topic_count_comment" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="topic_count_favourite" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="topic_cut_text" dbtype="varchar" precision="100" phptype="string" null="true" />
+		<field key="topic_forbid_comment" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="topic_text_hash" dbtype="varchar" precision="32" phptype="string" null="false" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="blog_id" name="blog_id" primary="false" unique="false" type="BTREE" >
+			<column key="blog_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_date_add" name="topic_date_add" primary="false" unique="false" type="BTREE" >
+			<column key="topic_date_add" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_rating" name="topic_rating" primary="false" unique="false" type="BTREE" >
+			<column key="topic_rating" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_publish" name="topic_publish" primary="false" unique="false" type="BTREE" >
+			<column key="topic_publish" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_text_hash" name="topic_text_hash" primary="false" unique="false" type="BTREE" >
+			<column key="topic_text_hash" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_count_comment" name="topic_count_comment" primary="false" unique="false" type="BTREE" >
+			<column key="topic_count_comment" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TopicContent" table="topic_content" extends="xPDOObject">
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="topic_text" dbtype="longtext" phptype="string" null="false" />
+		<field key="topic_text_short" dbtype="text" phptype="string" null="false" />
+		<field key="topic_text_source" dbtype="longtext" phptype="string" null="false" />
+		<field key="topic_extra" dbtype="text" phptype="string" null="false" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TopicPhoto" table="topic_photo" extends="xPDOSimpleObject">
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="true" index="index" />
+		<field key="path" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="description" dbtype="text" phptype="string" null="true" />
+		<field key="target_tmp" dbtype="varchar" precision="40" phptype="string" null="true" index="index" />
+
+		<index alias="topic_id" name="topic_id" primary="false" unique="false" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="target_tmp" name="target_tmp" primary="false" unique="false" type="BTREE" >
+			<column key="target_tmp" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="TopicQuestionVote" table="topic_question_vote" extends="xPDOObject">
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_voter_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="answer" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+
+		<index alias="topic_id_user_id" name="topic_id_user_id" primary="false" unique="true" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="false" />
+			<column key="user_voter_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_voter_id" name="user_voter_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_voter_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TopicRead" table="topic_read" extends="xPDOObject">
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="date_read" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="comment_count_last" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="comment_id_last" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+
+		<index alias="topic_id_user_id" name="topic_id_user_id" primary="false" unique="true" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="false" />
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="TopicTag" table="topic_tag" extends="xPDOObject">
+		<field key="topic_tag_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="topic_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="blog_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="topic_tag_text" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="topic_tag_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_id" name="topic_id" primary="false" unique="false" type="BTREE" >
+			<column key="topic_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="blog_id" name="blog_id" primary="false" unique="false" type="BTREE" >
+			<column key="blog_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="topic_tag_text" name="topic_tag_text" primary="false" unique="false" type="BTREE" >
+			<column key="topic_tag_text" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="User" table="user" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk"  generated="native" />
+		<field key="user_login" dbtype="varchar" precision="30" phptype="string" null="false" index="unique" />
+		<field key="user_password" dbtype="varchar" precision="50" phptype="string" null="false" />
+		<field key="user_mail" dbtype="varchar" precision="50" phptype="string" null="false" index="unique" />
+		<field key="user_skill" dbtype="float" precision="9,3" attributes="unsigned" phptype="float" null="false" default="0.000" />
+		<field key="user_date_register" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="user_date_activate" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="user_date_comment_last" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="user_ip_register" dbtype="varchar" precision="20" phptype="string" null="false" />
+		<field key="user_rating" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" index="index" />
+		<field key="user_count_vote" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="user_activate" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" index="index" />
+		<field key="user_activate_key" dbtype="varchar" precision="32" phptype="string" null="true" index="index" />
+		<field key="user_profile_name" dbtype="varchar" precision="50" phptype="string" null="true" />
+		<field key="user_profile_sex" dbtype="enum" precision="'man','woman','other'" phptype="string" null="false" default="other" index="index" />
+		<field key="user_profile_country" dbtype="varchar" precision="30" phptype="string" null="true" />
+		<field key="user_profile_region" dbtype="varchar" precision="30" phptype="string" null="true" />
+		<field key="user_profile_city" dbtype="varchar" precision="30" phptype="string" null="true" />
+		<field key="user_profile_birthday" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="user_profile_about" dbtype="text" phptype="string" null="true" />
+		<field key="user_profile_date" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="user_profile_avatar" dbtype="varchar" precision="250" phptype="string" null="true" />
+		<field key="user_profile_foto" dbtype="varchar" precision="250" phptype="string" null="true" />
+		<field key="user_settings_notice_new_topic" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="user_settings_notice_new_comment" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="user_settings_notice_new_talk" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="user_settings_notice_reply_comment" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="user_settings_notice_new_friend" dbtype="tinyint" precision="1" phptype="integer" null="false" default="1" />
+		<field key="user_settings_timezone" dbtype="varchar" precision="6" phptype="string" null="true" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_login" name="user_login" primary="false" unique="true" type="BTREE" >
+			<column key="user_login" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_mail" name="user_mail" primary="false" unique="true" type="BTREE" >
+			<column key="user_mail" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_activate_key" name="user_activate_key" primary="false" unique="false" type="BTREE" >
+			<column key="user_activate_key" length="" collation="A" null="true" />
+		</index>
+		<index alias="user_activate" name="user_activate" primary="false" unique="false" type="BTREE" >
+			<column key="user_activate" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_rating" name="user_rating" primary="false" unique="false" type="BTREE" >
+			<column key="user_rating" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_profile_sex" name="user_profile_sex" primary="false" unique="false" type="BTREE" >
+			<column key="user_profile_sex" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="UserAdministrator" table="user_administrator" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="true" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="UserChangemail" table="user_changemail" extends="xPDOSimpleObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="date_add" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="date_used" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="date_expired" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="mail_from" dbtype="varchar" precision="50" phptype="string" null="false" />
+		<field key="mail_to" dbtype="varchar" precision="50" phptype="string" null="false" />
+		<field key="code_from" dbtype="varchar" precision="32" phptype="string" null="false" index="index" />
+		<field key="code_to" dbtype="varchar" precision="32" phptype="string" null="false" index="index" />
+		<field key="confirm_from" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+		<field key="confirm_to" dbtype="tinyint" precision="1" phptype="integer" null="false" default="0" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="code_from" name="code_from" primary="false" unique="false" type="BTREE" >
+			<column key="code_from" length="" collation="A" null="false" />
+		</index>
+		<index alias="code_to" name="code_to" primary="false" unique="false" type="BTREE" >
+			<column key="code_to" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="UserField" table="user_field" extends="xPDOSimpleObject">
+		<field key="type" dbtype="varchar" precision="50" phptype="string" null="false" index="index" />
+		<field key="name" dbtype="varchar" precision="255" phptype="string" null="false" index="index" />
+		<field key="title" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="pattern" dbtype="varchar" precision="255" phptype="string" null="true" />
+
+		<index alias="name" name="name" primary="false" unique="false" type="BTREE" >
+			<column key="name" length="" collation="A" null="false" />
+		</index>
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE" >
+			<column key="type" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="UserFieldValue" table="user_field_value" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="field_id" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="value" dbtype="varchar" precision="255" phptype="string" null="true" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="field_id" length="" collation="A" null="true" />
+		</index>
+		<index alias="field_id" name="field_id" primary="false" unique="false" type="BTREE" >
+			<column key="field_id" length="" collation="A" null="true" />
+		</index>
+	</object>
+	<object class="UserNote" table="user_note" extends="xPDOSimpleObject">
+		<field key="target_user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="text" dbtype="text" phptype="string" null="false" />
+		<field key="date_add" dbtype="datetime" phptype="datetime" null="false" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="target_user_id" name="target_user_id" primary="false" unique="false" type="BTREE" >
+			<column key="target_user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="UserfeedSubscribe" table="userfeed_subscribe" extends="xPDOObject">
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="subscribe_type" dbtype="tinyint" precision="4" phptype="integer" null="false" />
+		<field key="target_id" dbtype="int" precision="11" phptype="integer" null="false" />
+
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+			<column key="subscribe_type" length="" collation="A" null="false" />
+			<column key="target_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Vote" table="vote" extends="xPDOObject">
+		<field key="target_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" default="0" index="pk" />
+		<field key="target_type" dbtype="enum" precision="'topic','blog','user','comment'" phptype="string" null="false" default="topic" index="pk" />
+		<field key="user_voter_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="pk" />
+		<field key="vote_direction" dbtype="tinyint" precision="2" phptype="integer" null="true" default="0" />
+		<field key="vote_value" dbtype="float" precision="9,3" phptype="float" null="false" default="0.000" />
+		<field key="vote_date" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="vote_ip" dbtype="varchar" precision="15" phptype="string" null="false" default="" index="index" />
+
+		<index alias="PRIMARY" name="PRIMARY" primary="true" unique="true" type="BTREE" >
+			<column key="target_id" length="" collation="A" null="false" />
+			<column key="target_type" length="" collation="A" null="false" />
+			<column key="user_voter_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_voter_id" name="user_voter_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_voter_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="vote_ip" name="vote_ip" primary="false" unique="false" type="BTREE" >
+			<column key="vote_ip" length="" collation="A" null="false" />
+		</index>
+	</object>
+	<object class="Wall" table="wall" extends="xPDOSimpleObject">
+		<field key="pid" dbtype="int" precision="11" phptype="integer" null="true" index="index" />
+		<field key="wall_user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="user_id" dbtype="int" precision="11" attributes="unsigned" phptype="integer" null="false" index="index" />
+		<field key="count_reply" dbtype="int" precision="11" phptype="integer" null="false" default="0" />
+		<field key="last_reply" dbtype="varchar" precision="100" phptype="string" null="false" />
+		<field key="date_add" dbtype="datetime" phptype="datetime" null="false" />
+		<field key="ip" dbtype="varchar" precision="20" phptype="string" null="false" index="index" />
+		<field key="text" dbtype="text" phptype="string" null="false" />
+
+		<index alias="pid" name="pid" primary="false" unique="false" type="BTREE" >
+			<column key="pid" length="" collation="A" null="true" />
+		</index>
+		<index alias="wall_user_id" name="wall_user_id" primary="false" unique="false" type="BTREE" >
+			<column key="wall_user_id" length="" collation="A" null="false" />
+		</index>
+		<index alias="ip" name="ip" primary="false" unique="false" type="BTREE" >
+			<column key="ip" length="" collation="A" null="false" />
+		</index>
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE" >
+			<column key="user_id" length="" collation="A" null="false" />
+		</index>
+	</object>
+</model>

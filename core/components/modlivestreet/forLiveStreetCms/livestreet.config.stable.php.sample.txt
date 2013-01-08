@@ -1,0 +1,48 @@
+<?php
+/*-------------------------------------------------------
+*
+*   LiveStreet Engine Social Networking
+*   Copyright © 2008 Mzhelskiy Maxim
+*
+*--------------------------------------------------------
+*
+*   Official site: www.livestreet.ru
+*   Contact e-mail: rus.engine@gmail.com
+*
+*   GNU General Public License, version 2:
+*   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+*
+---------------------------------------------------------
+*/
+/**
+ * Настройки для production-сервера.
+ * Для использования - переименовать файл в config.stable.php
+ */
+if(!defined('IN_MODX')) return;
+
+// Если надо, то $modx можно привязать к самому LiveStreet, но пока мы его просто заглобалим
+global $modx;   
+
+$config['sys']['cookie']['host'] = $modx->getOption('session_cookie_domain');
+$cookiePath = $modx->getOption('session_cookie_path', null, '/');
+if (empty($cookiePath)) $cookiePath = $modx->getOption('base_url', null, MODX_BASE_URL);
+$config['sys']['cookie']['path'] = $cookiePath;
+
+$config['sys']['cookie']['time'] = $cookieTime = $modx->getOption('session_cookie_lifetime');
+
+
+$web = preg_replace('/([^:])\/\//', "$1/",LIVESTREET_WEB.LIVESTREET_URL_PREFIXE);
+$web = preg_replace('/\/*$/', "", $web);
+
+// Формирует новый УРЛ для LiveStreet-сайта
+$config['path']['root']['web'] = $web;
+// Можно задать новый префикс для кеша, но не обязательно. 
+$config['sys']['cache']['prefix'] = 'livestreet_modx_cache';
+// Можно перегрузить скин
+$config['view']['skin']        = 'synio';  // шаблон(скин)
+// Можно взять название сайта из MODX
+$config['view']['name']        = $modx->getOption('site_name');                   // название сайта
+$config['view']['description'] = 'Description your site'; // seo description
+
+return $config;
+?>

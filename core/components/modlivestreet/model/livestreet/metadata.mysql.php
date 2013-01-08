@@ -1,0 +1,47 @@
+<?php
+
+$xpdo_meta_map = array (
+  'xPDOObject' => 
+  array (
+    0 => 'LivestreetBlog',
+    1 => 'LivestreetBlogUser',
+    2 => 'LivestreetComment',
+    3 => 'LivestreetCommentOnline',
+    4 => 'LivestreetFavourite',
+    5 => 'LivestreetFavouriteTag',
+    6 => 'LivestreetFriend',
+    7 => 'LivestreetGeoTarget',
+    8 => 'LivestreetInvite',
+    9 => 'LivestreetNotifyTask',
+    10 => 'LivestreetReminder',
+    11 => 'LivestreetSession',
+    12 => 'LivestreetStreamSubscribe',
+    13 => 'LivestreetStreamUserType',
+    14 => 'LivestreetTalk',
+    15 => 'LivestreetTalkBlacklist',
+    16 => 'LivestreetTalkUser',
+    17 => 'LivestreetTopic',
+    18 => 'LivestreetTopicContent',
+    19 => 'LivestreetTopicQuestionVote',
+    20 => 'LivestreetTopicRead',
+    21 => 'LivestreetTopicTag',
+    22 => 'LivestreetUser',
+    23 => 'LivestreetUserAdministrator',
+    24 => 'LivestreetUserFieldValue',
+    25 => 'LivestreetUserfeedSubscribe',
+    26 => 'LivestreetVote',
+  ),
+  'xPDOSimpleObject' => 
+  array (
+    0 => 'LivestreetGeoCity',
+    1 => 'LivestreetGeoCountry',
+    2 => 'LivestreetGeoRegion',
+    3 => 'LivestreetStreamEvent',
+    4 => 'LivestreetSubscribe',
+    5 => 'LivestreetTopicPhoto',
+    6 => 'LivestreetUserChangemail',
+    7 => 'LivestreetUserField',
+    8 => 'LivestreetUserNote',
+    9 => 'LivestreetWall',
+  ),
+);
