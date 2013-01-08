@@ -16,8 +16,12 @@
 */
 
 if(!class_exists('Smarty')){
-    require_once(Config::Get('path.root.engine').'/lib/external/Smarty/libs/Smarty.class.php');
+    require_once(Config::Get('path.root.engine').'/lib/external/Smarty/libs/Smarty.class.php');  
 }
+class modxSmarty extends Smarty{
+    public $modx;
+}
+
 require_once(Config::Get('path.root.engine').'/lib/external/CSSTidy-1.3/class.csstidy.php');
 require_once(Config::Get('path.root.engine').'/lib/external/JSMin-1.1.1/jsmin.php');
 
@@ -214,7 +218,7 @@ class ModuleViewer extends Module {
                  * Добавляем MODX-объект
                  */
                 if(!empty($this->modx)){
-                    $this->oSmarty->modx = & $this->modx;
+                    $this->oSmarty->modx = & $this->modx; 
                 }
                 
                 /**
@@ -354,7 +358,7 @@ class ModuleViewer extends Module {
 	 * @return Smarty
 	 */
 	public function CreateSmartyObject() {
-		return new Smarty();
+		return new modxSmarty();
 	}
 	/**
 	 * Ответ на ajax запрос
