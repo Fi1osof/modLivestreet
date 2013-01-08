@@ -15,7 +15,7 @@ require_once dirname(__FILE__). '/build.config.php';
 require_once dirname(__FILE__).'/build.transport.class.php';
   
 
-define('PKG_VERSION', '0.6.0'); 
+define('PKG_VERSION', '0.6.1'); 
 define('PKG_RELEASE', 'rc'); 
 
 //print_R($modx->config);
